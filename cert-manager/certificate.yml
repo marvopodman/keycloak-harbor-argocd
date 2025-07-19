@@ -6,7 +6,7 @@ metadata:
   namespace: harbor
 spec:
   dnsNames:
-    - harbor.demo.waaron.org
+    - harbor.chateautechlab.org
   secretName: harbor-tls
   issuerRef:
     name: letsencrypt-issuer
@@ -21,7 +21,7 @@ metadata:
   namespace: argocd
 spec:
   dnsNames:
-    - argocd.demo.waaron.org
+    - argocd.chateautechlab.org
   secretName: argocd-tls
   issuerRef:
     name: letsencrypt-issuer
@@ -35,9 +35,33 @@ metadata:
   name: keycloak-cert
   namespace: keycloak
 spec:
-  dnsNames:
-    - keycloak.demo.waaron.org
   secretName: keycloak-tls
   issuerRef:
     name: letsencrypt-issuer
     kind: ClusterIssuer
+  #commonName: keycloak.chateautechlab.com
+  commonName: keycloak.chateautechlab.org
+  dnsNames:
+    #- keycloak.chateautechlab.com
+    - keycloak.chateautechlab.org
+    
+  privateKey:
+    algorithm: RSA
+    size: 2048
+  usages:
+    - digital signature
+    - key encipherment
+
+#apiVersion: cert-manager.io/v1
+#kind: Certificate
+#metadata:
+#  name: keycloak-cert
+#  namespace: keycloak
+#spec:
+#  dnsNames:
+#    - keycloak.chateautechlab.com
+#  secretName: keycloak-tls
+#  issuerRef:
+#    name: letsencrypt-issuer
+#    kind: ClusterIssuer
+    

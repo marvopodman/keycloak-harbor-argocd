@@ -1,10 +1,69 @@
+# EKS module
+module "eks" {
+  source  = "terraform-aws-modules/eks/aws"
+  version = "~> 20.0"
+
+  cluster_name    = "keycloakharagro-cluster"
+  cluster_version = "1.29"
+
+  cluster_endpoint_public_access = true
+
+  cluster_addons = {
+    coredns = {
+      most_recent = true
+    }
+    kube-proxy = {
+      most_recent = true
+    }
+    vpc-cni = {
+      most_recent = true
+    }
+    aws-ebs-csi-driver = {
+      most_recent = true
+    }
+  }
+
+  vpc_id     = module.vpc.vpc_id
+  subnet_ids = module.vpc.private_subnets
+
+  eks_managed_node_group_defaults = {
+    instance_types = ["t2.medium"]
+  }
+
+  eks_managed_node_groups = {
+    keycloakharagro = {
+      min_size     = 1
+      max_size     = 5
+      desired_size = 3
+
+      instance_types = ["t2.medium"]
+      capacity_type  = "SPOT"
+
+      iam_role_additional_policies = {
+        ec2_access = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
+      }
+    }
+  }
+
+  iam_role_additional_policies = {
+    ec2_access = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
+  }
+
+  enable_cluster_creator_admin_permissions = true
+
+  tags = {
+    Project = "keycloakharagro"
+  }
+}
+
+/*
 data "aws_caller_identity" "current" {}
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 20.0"
 
-  cluster_name    = "realworld-cluster"
+  cluster_name    = "keycloakharagro-cluster"
   cluster_version = "1.29"
 
   cluster_endpoint_public_access  = true
@@ -64,6 +123,9 @@ module "eks" {
 
 
   tags = {
-    Project = "realworld"
+    Project = "keycloakharagro"
   }
 }
+*/
+
+
